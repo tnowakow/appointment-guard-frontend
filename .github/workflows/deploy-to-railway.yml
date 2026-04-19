@@ -27,8 +27,15 @@ jobs:
         env:
           VITE_API_URL: https://appointment-guard-production.up.railway.app
       
-      - name: Deploy to Railway
-        uses: railwayapp/action-deploy@v1.2.0
-        with:
-          project-id: ${{ secrets.RAILWAY_PROJECT_ID }}
-          token: ${{ secrets.RAILWAY_API_TOKEN }}
+      - name: Deploy to Railway via API
+        run: |
+          # Login to Railway with API token
+          echo "${{ secrets.RAILWAY_API_TOKEN }}" | railway login --token -
+          
+          # Link to existing project
+          railway link --project ${{ secrets.RAILWAY_PROJECT_ID }}
+          
+          # Deploy the built frontend
+          railway up --detach
+        env:
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
