@@ -5,7 +5,7 @@ import FilterBar from './components/FilterBar';
 import PatientDetailModal from './components/PatientDetailModal';
 import InterventionQueue from './components/InterventionQueue';
 import AnalyticsOverview from './components/AnalyticsOverview';
-import { Calendar, Users, BarChart3, Home, Shield } from 'lucide-react';
+import { AlertTriangle, BarChart3, Home, Shield } from 'lucide-react';
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
