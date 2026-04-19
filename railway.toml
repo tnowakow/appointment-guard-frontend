@@ -5,5 +5,5 @@ builder = "NIXPACKS"
 NODE_VERSION = "20.19.0"
 
 [deploy]
-startCommand = "npx serve -s dist"
+startCommand = "caddy file-server --listen :3000 --root /app/dist"
 port = 3000
