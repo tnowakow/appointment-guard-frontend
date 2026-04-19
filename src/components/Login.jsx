@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Shield } from 'lucide-react';
 import { useAppointmentStore } from '../store/appointmentStore';
 
 const Login = () => {
