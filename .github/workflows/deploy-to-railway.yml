@@ -1,4 +1,4 @@
-name: Deploy Frontend to Railway
+name: Deploy Frontend to Netlify
 
 on:
   push:
@@ -27,15 +27,13 @@ jobs:
         env:
           VITE_API_URL: https://appointment-guard-production.up.railway.app
       
-      - name: Deploy to Railway via API
-        run: |
-          # Login to Railway with API token
-          echo "${{ secrets.RAILWAY_API_TOKEN }}" | railway login --token -
-          
-          # Link to existing project
-          railway link --project ${{ secrets.RAILWAY_PROJECT_ID }}
-          
-          # Deploy the built frontend
-          railway up --detach
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: './dist'
+          production-deploy: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
         env:
-          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
