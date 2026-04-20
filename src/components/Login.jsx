@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import { Shield } from 'lucide-react';
-import { useAppointmentStore } from '../store/appointmentStore';
 
-const Login = () => {
+const Login = ({ onLoginSuccess }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const setAuth = useAppointmentStore(state => state.setAuth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // For MVP, accept any password
     if (password.length > 0) {
-      setAuth(true);
+      onLoginSuccess?.();
       setError('');
     } else {
       setError('Please enter a password');

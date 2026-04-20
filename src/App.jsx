@@ -5,10 +5,12 @@ import FilterBar from './components/FilterBar';
 import PatientDetailModal from './components/PatientDetailModal';
 import InterventionQueue from './components/InterventionQueue';
 import AnalyticsOverview from './components/AnalyticsOverview';
+import Login from './components/Login';
 import { scoreAppointment, sendIntervention } from './lib/api';
 import { AlertTriangle, BarChart3, Home, Shield } from 'lucide-react';
 
 const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
@@ -22,6 +24,19 @@ const App = () => {
     isLoading,
     error
   } = useAppointmentStore();
+
+  // Check for existing session on mount
+  useEffect(() => {
+    const storedAuth = localStorage.getItem('appointmentGuardAuthenticated');
+    if (storedAuth === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLoginSuccess = () => {
+    localStorage.setItem('appointmentGuardAuthenticated', 'true');
+    setIsAuthenticated(true);
+  };
 
   // Fetch real appointments from backend
   useEffect(() => {
@@ -141,6 +156,11 @@ const App = () => {
         </div>
       </div>
     );
+  }
+
+  // Show login screen if not authenticated
+  if (!isAuthenticated) {
+    return <Login onLoginSuccess={handleLoginSuccess} />;
   }
 
   return (
