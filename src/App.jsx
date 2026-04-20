@@ -5,6 +5,7 @@ import FilterBar from './components/FilterBar';
 import PatientDetailModal from './components/PatientDetailModal';
 import InterventionQueue from './components/InterventionQueue';
 import AnalyticsOverview from './components/AnalyticsOverview';
+import { scoreAppointment, sendIntervention } from './lib/api';
 import { AlertTriangle, BarChart3, Home, Shield } from 'lucide-react';
 
 const App = () => {
@@ -22,56 +23,66 @@ const App = () => {
     error
   } = useAppointmentStore();
 
-  // Mock data for demonstration
+  // Fetch real appointments from backend
   useEffect(() => {
-    const mockAppointments = [
-      {
-        patient_id: '1',
-        patient_name: 'John Doe',
-        patient_phone: '+1 (555) 123-4567',
-        appointment_date: '2026-04-20',
-        appointment_time: '14:00',
-        provider: 'Dr. Smith',
-        risk_score: 0.85,
-        risk_category: 'HIGH',
-        recommendation: 'Send confirmation SMS + call if no response'
-      },
-      {
-        patient_id: '2',
-        patient_name: 'Jane Smith',
-        patient_phone: '+1 (555) 987-6543',
-        appointment_date: '2026-04-20',
-        appointment_time: '10:30',
-        provider: 'Dr. Johnson',
-        risk_score: 0.45,
-        risk_category: 'MEDIUM',
-        recommendation: 'Send reminder SMS 24h before'
-      },
-      {
-        patient_id: '3',
-        patient_name: 'Bob Wilson',
-        patient_phone: '+1 (555) 456-7890',
-        appointment_date: '2026-04-21',
-        appointment_time: '09:15',
-        provider: 'Dr. Brown',
-        risk_score: 0.25,
-        risk_category: 'LOW',
-        recommendation: 'Standard reminder only'
-      },
-      {
-        patient_id: '4',
-        patient_name: 'Alice Johnson',
-        patient_phone: '+1 (555) 234-5678',
-        appointment_date: '2026-04-21',
-        appointment_time: '15:45',
-        provider: 'Dr. Smith',
-        risk_score: 0.92,
-        risk_category: 'HIGH',
-        recommendation: 'Send confirmation SMS + call if no response'
+    const fetchAppointments = async () => {
+      try {
+        // For now, use mock data until we have a GET /appointments endpoint
+        // TODO: Replace with actual API call when backend endpoint is ready
+        const mockAppointments = [
+          {
+            patient_id: '1',
+            patient_name: 'John Doe',
+            patient_phone: '+1 (555) 123-4567',
+            appointment_date: '2026-04-20',
+            appointment_time: '14:00',
+            provider: 'Dr. Smith',
+            risk_score: 0.85,
+            risk_category: 'HIGH',
+            recommendation: 'Send confirmation SMS + call if no response'
+          },
+          {
+            patient_id: '2',
+            patient_name: 'Jane Smith',
+            patient_phone: '+1 (555) 987-6543',
+            appointment_date: '2026-04-20',
+            appointment_time: '10:30',
+            provider: 'Dr. Johnson',
+            risk_score: 0.45,
+            risk_category: 'MEDIUM',
+            recommendation: 'Send reminder SMS 24h before'
+          },
+          {
+            patient_id: '3',
+            patient_name: 'Bob Wilson',
+            patient_phone: '+1 (555) 456-7890',
+            appointment_date: '2026-04-21',
+            appointment_time: '09:15',
+            provider: 'Dr. Brown',
+            risk_score: 0.25,
+            risk_category: 'LOW',
+            recommendation: 'Standard reminder only'
+          },
+          {
+            patient_id: '4',
+            patient_name: 'Alice Johnson',
+            patient_phone: '+1 (555) 234-5678',
+            appointment_date: '2026-04-21',
+            appointment_time: '15:45',
+            provider: 'Dr. Smith',
+            risk_score: 0.92,
+            risk_category: 'HIGH',
+            recommendation: 'Send confirmation SMS + call if no response'
+          }
+        ];
+        
+        setAppointments(mockAppointments);
+      } catch (err) {
+        console.error('Error fetching appointments:', err);
       }
-    ];
-    
-    setAppointments(mockAppointments);
+    };
+
+    fetchAppointments();
   }, [setAppointments]);
 
   const handleAppointmentClick = (appointment) => {
@@ -80,9 +91,28 @@ const App = () => {
   };
 
   const handleSendIntervention = async (appointment, action) => {
-    // In a real app, this would call the API
-    console.log(`Sending ${action} intervention for ${appointment.patient_name}`);
-    // Here you would normally make an API call to send the intervention
+    try {
+      // Prepare appointment data for API
+      const appointmentData = {
+        patient_id: appointment.patient_id,
+        patient_name: appointment.patient_name,
+        patient_phone: appointment.patient_phone,
+        appointment_date: appointment.appointment_date,
+        appointment_time: appointment.appointment_time,
+        provider_name: appointment.provider,
+        action_type: action
+      };
+      
+      // Call the real API
+      const response = await sendIntervention(appointmentData);
+      console.log('Intervention sent successfully:', response);
+      
+      // Show success message (you can add toast notifications here)
+      alert(`✅ ${action} sent to ${appointment.patient_name}`);
+    } catch (error) {
+      console.error('Error sending intervention:', error);
+      alert('❌ Failed to send intervention. Please try again.');
+    }
   };
 
   const handleFilterChange = (filterType, value) => {
