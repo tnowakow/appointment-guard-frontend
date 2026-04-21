@@ -36,7 +36,7 @@ const AppointmentCard = ({ appointment, onClick }) => {
           <div className="flex items-center justify-between">
             <div>
               <span className="text-sm font-medium text-gray-700">Provider:</span>
-              <span className="ml-1 text-sm text-gray-600">{appointment.provider || 'N/A'}</span>
+              <span className="ml-1 text-sm text-gray-600">{appointment.provider_name || 'N/A'}</span>
             </div>
             <RiskBadge riskCategory={appointment.risk_category} />
           </div>

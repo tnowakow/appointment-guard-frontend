@@ -6,7 +6,7 @@ import PatientDetailModal from './components/PatientDetailModal';
 import InterventionQueue from './components/InterventionQueue';
 import AnalyticsOverview from './components/AnalyticsOverview';
 import Login from './components/Login';
-import { scoreAppointment, sendIntervention } from './lib/api';
+import { fetchAppointments, scoreAppointment, sendIntervention } from './lib/api';
 import { AlertTriangle, BarChart3, Home, Shield } from 'lucide-react';
 
 const App = () => {
@@ -40,65 +40,26 @@ const App = () => {
 
   // Fetch real appointments from backend
   useEffect(() => {
-    const fetchAppointments = async () => {
+    const loadAppointments = async () => {
       try {
-        // For now, use mock data until we have a GET /appointments endpoint
-        // TODO: Replace with actual API call when backend endpoint is ready
-        const mockAppointments = [
-          {
-            patient_id: '1',
-            patient_name: 'John Doe',
-            patient_phone: '+1 (555) 123-4567',
-            appointment_date: '2026-04-20',
-            appointment_time: '14:00',
-            provider: 'Dr. Smith',
-            risk_score: 0.85,
-            risk_category: 'HIGH',
-            recommendation: 'Send confirmation SMS + call if no response'
-          },
-          {
-            patient_id: '2',
-            patient_name: 'Jane Smith',
-            patient_phone: '+1 (555) 987-6543',
-            appointment_date: '2026-04-20',
-            appointment_time: '10:30',
-            provider: 'Dr. Johnson',
-            risk_score: 0.45,
-            risk_category: 'MEDIUM',
-            recommendation: 'Send reminder SMS 24h before'
-          },
-          {
-            patient_id: '3',
-            patient_name: 'Bob Wilson',
-            patient_phone: '+1 (555) 456-7890',
-            appointment_date: '2026-04-21',
-            appointment_time: '09:15',
-            provider: 'Dr. Brown',
-            risk_score: 0.25,
-            risk_category: 'LOW',
-            recommendation: 'Standard reminder only'
-          },
-          {
-            patient_id: '4',
-            patient_name: 'Alice Johnson',
-            patient_phone: '+1 (555) 234-5678',
-            appointment_date: '2026-04-21',
-            appointment_time: '15:45',
-            provider: 'Dr. Smith',
-            risk_score: 0.92,
-            risk_category: 'HIGH',
-            recommendation: 'Send confirmation SMS + call if no response'
-          }
-        ];
+        console.log('Fetching appointments from backend...');
+        const data = await fetchAppointments();
+        console.log('Received appointments:', data);
         
-        setAppointments(mockAppointments);
+        if (data && data.appointments) {
+          setAppointments(data.appointments);
+        } else {
+          console.warn('No appointments found in response');
+          setAppointments([]);
+        }
       } catch (err) {
         console.error('Error fetching appointments:', err);
+        setError(`Failed to load appointments: ${err.message}`);
       }
     };
 
-    fetchAppointments();
-  }, [setAppointments]);
+    loadAppointments();
+  }, [setAppointments, setError]);
 
   const handleAppointmentClick = (appointment) => {
     setSelectedAppointment(appointment);
