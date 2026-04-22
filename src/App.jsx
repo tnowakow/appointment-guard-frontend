@@ -18,6 +18,7 @@ const App = () => {
   const {
     appointments,
     setAppointments,
+    setError,
     filteredAppointments,
     sortedAppointments,
     highRiskAppointments,
