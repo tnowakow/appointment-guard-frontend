@@ -28,9 +28,7 @@ const useAppointmentStore = create((set, get) => ({
       if (filters.date && appointment.appointment_date !== filters.date) {
         return false;
       }
-      if (filters.provider && appointment.provider !== filters.provider) {
-        return false;
-      }
+      // Note: provider filter not implemented yet - backend returns provider_name
       return true;
     });
   },
