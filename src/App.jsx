@@ -44,11 +44,12 @@ const App = () => {
     const loadAppointments = async () => {
       try {
         console.log('Fetching appointments from backend...');
-        const data = await fetchAppointments();
-        console.log('Received appointments:', data);
+        const response = await fetchAppointments();
+        console.log('Received appointments:', response);
         
-        if (data && data.appointments) {
-          setAppointments(data.appointments);
+        // Axios returns { data: {...} }, so we need response.data
+        if (response && response.data && response.data.appointments) {
+          setAppointments(response.data.appointments);
         } else {
           console.warn('No appointments found in response');
           setAppointments([]);
